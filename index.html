@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rowan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/scrollreveal"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #e02020;
+    --red-dim: #8a1212;
+    --bg: #050505;
+    --surface: #0c0c0c;
+    --surface2: #121212;
+    --border: rgba(255,255,255,0.05);
+    --border-red: rgba(224,32,32,0.2);
+    --text: #f0f0f0;
+    --muted: #555;
+    --mono: 'Space Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero-name {
+    font-family: var(--display);
+    font-size: clamp(72px, 16vw, 140px);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-name span { color: var(--red); }
+
+  .hero-bio {
+    margin-top: 28px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 440px;
+  }
+
+  .hero-line {
+    width: 60px;
+    height: 2px;
+    background: var(--red);
+    margin-top: 40px;
+    box-shadow: 0 0 15px var(--red);
+  }
+
+  /* SECTIONS */
+  section { padding: 80px 0 0; visibility: hidden; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-red); }
+
+  /* CARDS with Glow Animation */
+  .card, .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+    /* Apply the breathing animation */
+    animation: breathingGlow 4s infinite ease-in-out;
+  }
+
+  /* Define the breathing animation */
+  @keyframes breathingGlow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(224, 32, 32, 0.05), inset 0 0 2px rgba(224, 32, 32, 0.02);
+      border-color: var(--border);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(224, 32, 32, 0.15), inset 0 0 5px rgba(224, 32, 32, 0.05);
+      border-color: rgba(224, 32, 32, 0.15);
+    }
+  }
+
+  .card:hover, .stat-card:hover {
+    border-color: var(--red);
+    background: var(--surface2);
+    transform: translateY(-5px);
+    /* Intensify glow on hover and pause breathing */
+    animation-play-state: paused;
+    box-shadow: 0 0 25px rgba(224, 32, 32, 0.4), inset 0 0 10px rgba(224, 32, 32, 0.1);
+  }
+
+  .socials-grid, .gear-grid { display: grid; gap: 12px; }
+  .socials-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .gear-grid { grid-template-columns: 1fr 1fr; }
+
+  .social-icon svg { width: 18px; height: 18px; fill: var(--red); margin-bottom: 8px; }
+  .social-handle { font-size: 13px; font-weight: bold; }
+
+  .gear-category-title { font-size: 10px; letter-spacing: 0.2em; color: var(--red); margin-bottom: 12px; font-weight: bold; }
+  .gear-item { display: flex; justify-content: space-between; font-size: 11px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .gear-val { color: var(--muted); }
+
+  /* ABOUT BLOCK */
+  .about-block { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .about-text {
+    grid-column: 1 / -1; font-size: 13px; color: var(--muted); line-height: 1.9;
+    padding: 24px; background: var(--surface); border-left: 3px solid var(--red);
+    /* Also give the text block the base glow */
+    animation: breathingGlow 4s infinite ease-in-out;
+  }
+  .stat-card {
+    padding: 24px; text-align: center;
+  }
+  .stat-num { font-family: var(--display); font-size: 36px; font-weight: 800; color: var(--red); line-height: 1; }
+  .stat-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+  /* CONTACT */
+  .contact-bio { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .contact-btn {
+    padding: 16px 32px; background: var(--red); color: #fff; border: none;
+    font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 0.2em;
+    cursor: pointer; position: relative; transition: 0.3s; text-transform: uppercase;
+    /* Give button the glow too */
+    animation: breathingGlow 4s infinite ease-in-out;
+  }
+  .contact-btn:hover { 
+    background: var(--red-dim); 
+    letter-spacing: 0.3em;
+    animation-play-state: paused;
+    box-shadow: 0 0 25px rgba(224, 32, 32, 0.6);
+  }
+
+  #copy-popup {
+    position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+    background: #fff; color: #000; padding: 4px 12px; border-radius: 2px;
+    font-size: 10px; font-weight: bold; opacity: 0; transition: 0.3s; pointer-events: none;
+  }
+  #copy-popup.show { opacity: 1; top: -50px; }
+
+  footer { margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--border); text-align: right; font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 520px) { .gear-grid, .about-block { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="page">
+  <div class="hero">
+    <p class="hero-tag scroll-hero">// rowan v2.6</p>
+    <h1 class="hero-name scroll-hero">row<span>an</span></h1>
+    <p class="hero-bio scroll-hero">2012/05/08<br>professional gamer / video editor.</p>
+    <div class="hero-line scroll-hero"></div>
+  </div>
+
+  <section id="socials">
+    <div class="section-label">socials</div>
+    <div class="socials-grid">
+      <a class="card" href="https://instagram.com/rowan.aim" target="_blank">
+        <div class="social-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></div>
+        <div class="social-handle">@rowan.aim</div>
+      </a>
+      <a class="card" href="http://discord.com/users/1455936357905207414" target="_blank">
+        <div class="social-icon"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.053a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg></div>
+        <div class="social-handle">2nd8i</div>
+      </a>
+      <a class="card" href="https://twitter.com/waonrowan" target="_blank">
+        <div class="social-icon"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.626 5.904-5.626zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+        <div class="social-handle">@waonrowan</div>
+      </a>
+      <a class="card" href="https://youtube.com/@42wfwfwf" target="_blank">
+        <div class="social-icon"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+        <div class="social-handle">@42wfwfwf</div>
+      </a>
+    </div>
+  </section>
+
+  <section id="gear">
+    <div class="section-label">gear & peripherals</div>
+    <div class="gear-grid">
+      <div class="card">
+        <div class="gear-category-title">// input</div>
+        <div class="gear-item"><span>mouse</span><span class="gear-val">OP1w 4k</span></div>
+        <div class="gear-item"><span>keyboard</span><span class="gear-val">AULA Hero 68HE</span></div>
+      </div>
+      <div class="card">
+        <div class="gear-category-title">// audio</div>
+        <div class="gear-item"><span>mic</span><span class="gear-val">AM8T</span></div>
+        <div class="gear-item"><span>soundbar</span><span class="gear-val">Katana V2</span></div>
+      </div>
+      <div class="card">
+        <div class="gear-category-title">// display</div>
+        <div class="gear-item"><span>monitor 1</span><span class="gear-val">AMEL IPS 1080p</span></div>
+        <div class="gear-item"><span>monitor 2</span><span class="gear-val">LG Ultragear</span></div>
+        <div class="gear-item"><span>refresh</span><span class="gear-val">165hz / 144hz</span></div>
+      </div>
+      <div class="card">
+        <div class="gear-category-title">// rig</div>
+        <div class="gear-item"><span>cpu</span><span class="gear-val">i5-12400f</span></div>
+        <div class="gear-item"><span>gpu</span><span class="gear-val">rtx 3060ti</span></div>
+        <div class="gear-item"><span>ram</span><span class="gear-val">16GB DDR4</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-label">about</div>
+    <div class="about-block">
+      <div class="about-text">
+        hey; I'm rowan. Ex semi-pro on Counter-Strike 2 for TEAM AIREX as the role of rifler. I've been editing videos sine i was 6 years old and officially started premiere pro as of the age of 10; and as of now, this is my job. technical enthusiast. I spend most of my free time refining my aim in aim trainers. This site is where I track my gear and current projects.
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4.5+</div>
+        <div class="stat-label">years video editing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">29K</div>
+        <div class="stat-label">peak cs2 rating</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-label">contact</div>
+    <p class="contact-bio">for business inquiries, contact me via pressing the email or going to my socials and dm'ing me.</p>
+    <div style="position: relative; display: inline-block;">
+      <button class="contact-btn" onclick="copyEmail()">
+        SEND AN EMAIL
+        <div id="copy-popup">COPIED!</div>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <p>rowan © 2026</p>
+  </footer>
+</div>
+
+<script>
+  const srConfig = { 
+    delay: 200, 
+    distance: '40px', 
+    origin: 'bottom', 
+    opacity: 0,
+    duration: 1000,
+    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+    viewFactor: 0.15,
+    reset: true
+  };
+
+  ScrollReveal().reveal('section', srConfig);
+  ScrollReveal().reveal('.scroll-hero', { 
+    ...srConfig,
+    delay: 300, 
+    interval: 100,
+    distance: '20px',
+    reset: false 
+  });
+
+  function copyEmail() {
+    navigator.clipboard.writeText("hglmfao@gmail.com");
+    const popup = document.getElementById('copy-popup');
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 2000);
+  }
+
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  const GRID = 60; let tick = 0;
+  const PARTICLES = Array.from({length: 30}, () => ({
+    x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 1.2, alpha: Math.random() * 0.35, red: Math.random() > 0.7
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+    for (let c = 0; c < canvas.width / GRID + 1; c++) {
+      const x = c * GRID + ((tick * 0.1) % GRID);
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let r = 0; r < canvas.height / GRID + 1; r++) {
+      const y = r * GRID + ((tick * 0.05) % GRID);
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+    const scanY = ((tick * 0.5) % (canvas.height + 400)) - 200;
+    const grad = ctx.createLinearGradient(0, scanY - 100, 0, scanY + 100);
+    grad.addColorStop(0, 'transparent'); 
+    grad.addColorStop(0.5, 'rgba(224,32,32,0.06)'); 
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad; ctx.fillRect(0, scanY - 100, canvas.width, 200);
+    PARTICLES.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width; if (p.y < 0) p.y = canvas.height;
+      if (p.x > canvas.width) p.x = 0; if (p.y > canvas.height) p.y = 0;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.red ? `rgba(224,32,32,${p.alpha})` : `rgba(255,255,255,${p.alpha * 0.5})`;
+      ctx.fill();
+    });
+    tick++; requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+</body>
+</html>
