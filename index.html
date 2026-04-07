@@ -103,8 +103,8 @@
   }
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-red); }
 
-  /* CARDS with Glow Animation */
-  .card, .stat-card {
+  /* CARDS */
+  .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -114,29 +114,12 @@
     color: var(--text);
     position: relative;
     overflow: hidden;
-    /* Apply the breathing animation */
-    animation: breathingGlow 4s infinite ease-in-out;
   }
 
-  /* Define the breathing animation */
-  @keyframes breathingGlow {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(224, 32, 32, 0.05), inset 0 0 2px rgba(224, 32, 32, 0.02);
-      border-color: var(--border);
-    }
-    50% {
-      box-shadow: 0 0 15px rgba(224, 32, 32, 0.15), inset 0 0 5px rgba(224, 32, 32, 0.05);
-      border-color: rgba(224, 32, 32, 0.15);
-    }
-  }
-
-  .card:hover, .stat-card:hover {
+  .card:hover {
     border-color: var(--red);
     background: var(--surface2);
     transform: translateY(-5px);
-    /* Intensify glow on hover and pause breathing */
-    animation-play-state: paused;
-    box-shadow: 0 0 25px rgba(224, 32, 32, 0.4), inset 0 0 10px rgba(224, 32, 32, 0.1);
   }
 
   .socials-grid, .gear-grid { display: grid; gap: 12px; }
@@ -155,10 +138,9 @@
   .about-text {
     grid-column: 1 / -1; font-size: 13px; color: var(--muted); line-height: 1.9;
     padding: 24px; background: var(--surface); border-left: 3px solid var(--red);
-    /* Also give the text block the base glow */
-    animation: breathingGlow 4s infinite ease-in-out;
   }
   .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
     padding: 24px; text-align: center;
   }
   .stat-num { font-family: var(--display); font-size: 36px; font-weight: 800; color: var(--red); line-height: 1; }
@@ -170,15 +152,8 @@
     padding: 16px 32px; background: var(--red); color: #fff; border: none;
     font-family: var(--mono); font-size: 12px; font-weight: bold; letter-spacing: 0.2em;
     cursor: pointer; position: relative; transition: 0.3s; text-transform: uppercase;
-    /* Give button the glow too */
-    animation: breathingGlow 4s infinite ease-in-out;
   }
-  .contact-btn:hover { 
-    background: var(--red-dim); 
-    letter-spacing: 0.3em;
-    animation-play-state: paused;
-    box-shadow: 0 0 25px rgba(224, 32, 32, 0.6);
-  }
+  .contact-btn:hover { background: var(--red-dim); letter-spacing: 0.3em; }
 
   #copy-popup {
     position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
@@ -187,7 +162,36 @@
   }
   #copy-popup.show { opacity: 1; top: -50px; }
 
-  footer { margin-top: 100px; padding: 40px 0; border-top: 1px solid var(--border); text-align: right; font-size: 11px; color: var(--muted); }
+  /* COMING SOON BLOCK */
+  .coming-soon-container {
+    margin-top: 100px;
+    padding: 40px;
+    border: 1px dashed var(--border-red);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cs-title {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    text-transform: uppercase;
+    transition: 0.3s;
+  }
+  .cs-title:hover {
+    color: var(--red);
+    text-shadow: 2px 0 #fff, -2px 0 var(--red-dim);
+  }
+  .cs-sub {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.4em;
+    margin-top: 10px;
+  }
+
+  footer { margin-top: 60px; padding: 40px 0; border-top: 1px solid var(--border); text-align: right; font-size: 11px; color: var(--muted); }
 
   @media (max-width: 520px) { .gear-grid, .about-block { grid-template-columns: 1fr; } }
 </style>
@@ -198,10 +202,10 @@
 
 <div class="page">
   <div class="hero">
-    <p class="hero-tag scroll-hero">// rowan v2.6</p>
-    <h1 class="hero-name scroll-hero">row<span>an</span></h1>
-    <p class="hero-bio scroll-hero">2012/05/08<br>professional gamer / video editor.</p>
-    <div class="hero-line scroll-hero"></div>
+    <p class="hero-tag scroll-hero-reset">// rowan v2.6</p>
+    <h1 class="hero-name scroll-hero-reset">row<span>an</span></h1>
+    <p class="hero-bio scroll-hero-reset">2012/05/08<br>professional gamer / video editor.</p>
+    <div class="hero-line scroll-hero-reset"></div>
   </div>
 
   <section id="socials">
@@ -233,11 +237,13 @@
         <div class="gear-category-title">// input</div>
         <div class="gear-item"><span>mouse</span><span class="gear-val">OP1w 4k</span></div>
         <div class="gear-item"><span>keyboard</span><span class="gear-val">AULA Hero 68HE</span></div>
+        <div class="gear-item"><span>mousepad</span><span class="gear-val">Artisan FX Zero</span></div>
       </div>
       <div class="card">
         <div class="gear-category-title">// audio</div>
         <div class="gear-item"><span>mic</span><span class="gear-val">AM8T</span></div>
         <div class="gear-item"><span>soundbar</span><span class="gear-val">Katana V2</span></div>
+        <div class="gear-item"><span>headset</span><span class="gear-val">SKY-ANC-H1X</span></div>
       </div>
       <div class="card">
         <div class="gear-category-title">// display</div>
@@ -258,7 +264,7 @@
     <div class="section-label">about</div>
     <div class="about-block">
       <div class="about-text">
-        hey; I'm rowan. Ex semi-pro on Counter-Strike 2 for TEAM AIREX as the role of rifler. I've been editing videos sine i was 6 years old and officially started premiere pro as of the age of 10; and as of now, this is my job. technical enthusiast. I spend most of my free time refining my aim in aim trainers. This site is where I track my gear and current projects.
+        hey; I'm rowan. Ex semi-pro on Counter-Strike 2 for TEAM AIREX as the role of rifler, video editor, and technical enthusiast. I spend most of my time refining my workflow in Premiere and pushing for top benchmarks in rhythm games and aimtrainers. This is where I track my gear and current projects.
       </div>
       <div class="stat-card">
         <div class="stat-num">4.5+</div>
@@ -273,12 +279,19 @@
 
   <section id="contact">
     <div class="section-label">contact</div>
-    <p class="contact-bio">for business inquiries, contact me via pressing the email or going to my socials and dm'ing me.</p>
+    <p class="contact-bio">for business inquiries, hit the button below.</p>
     <div style="position: relative; display: inline-block;">
       <button class="contact-btn" onclick="copyEmail()">
         SEND AN EMAIL
         <div id="copy-popup">COPIED!</div>
       </button>
+    </div>
+  </section>
+
+  <section id="coming-soon">
+    <div class="coming-soon-container">
+      <div class="cs-title">more coming soon!</div>
+      <div class="cs-sub">SYSTEM STATUS: [DEVELOPMENT_IN_PROGRESS]</div>
     </div>
   </section>
 
@@ -299,13 +312,15 @@
     reset: true
   };
 
+  // Sections re-animate on scroll up/down
   ScrollReveal().reveal('section', srConfig);
-  ScrollReveal().reveal('.scroll-hero', { 
+  
+  // Hero elements now re-animate on scroll up/down
+  ScrollReveal().reveal('.scroll-hero-reset', { 
     ...srConfig,
     delay: 300, 
     interval: 100,
-    distance: '20px',
-    reset: false 
+    distance: '20px'
   });
 
   function copyEmail() {
